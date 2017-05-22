@@ -12,9 +12,9 @@ sudo add-apt-repository -y ppa:certbot/certbot;
 sudo apt-get update;
 sudo apt-get -y install certbot;
 
-### 获取证书
-certbot certonly --standalone -d example.com -d api.msdev.cc;
-certbot certonly --standalone -d example.com -d msdev.cc -d www.msdev.cc;
+### 获取证书  Can't auto now! 先解析域名再验证
+##### certbot certonly --standalone -d example.com -d api.msdev.cc;
+##### certbot certonly --standalone -d example.com -d msdev.cc -d www.msdev.cc;
 
 ### 写入nginx配置
 cd /etc/nginx/sites-available/;
@@ -28,9 +28,9 @@ server {
         server_name api.msdev.cc;
         listen 443 ssl;
 
-        ssl_certificate /etc/letsencrypt/live/api.msdev.cc/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/api.msdev.cc/privkey.pem;
-        ssl_trusted_certificate /etc/letsencrypt/live/api.msdev.cc/chain.pem;
+        #####ssl_certificate /etc/letsencrypt/live/api.msdev.cc/fullchain.pem;
+        #####ssl_certificate_key /etc/letsencrypt/live/api.msdev.cc/privkey.pem;
+        #####ssl_trusted_certificate /etc/letsencrypt/live/api.msdev.cc/chain.pem;
 
         location / {
                 server_tokens off;
@@ -75,9 +75,9 @@ server {
     root /var/www/msdev.cc;
     index index.html;
 
-    ssl_certificate /etc/letsencrypt/live/msdev.cc/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/msdev.cc/chain.pem;
+    #####ssl_certificate /etc/letsencrypt/live/msdev.cc/fullchain.pem;
+    #####ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
+    #####ssl_trusted_certificate /etc/letsencrypt/live/msdev.cc/chain.pem;
 
 
     location / {
