@@ -2,43 +2,33 @@
 **模型名称××
 ```csharp
 /// <summary>
-/// 更改企业
-/// </summary>
-/// <remarks>对象内容为json字符串</remarks>
-/// <param name="id"></param>
-/// <param name="tblCompany"></param>
-/// <returns></returns>
-[HttpPut("{id}")]
-[ProducesResponseType(200,Type= typeof(int))]
-public async Task<JsonResult> PutTblCompany([FromRoute] int id, [FromBody] TblCompany tblCompany)
-{
-    if (!ModelState.IsValid)
-    {
-        return JsonFailed();
-    }
+		/// 供应商审核
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="review"></param>
+		/// <returns></returns>
+				[HttpPut("{id}")]
+		public IActionResult PutTblCompany([FromRoute] int id, ReviewSupplierForm review)
+		{
+			if (!ModelState.IsValid)
+			{
+				return JsonFailed();
+			}
 
-    if (id != tblCompany.Id)
-    {
-        return JsonFailed("invalid Id");
-    }
+			TblCompany company = _context.TblCompany.SingleOrDefault(m => m.Id == id);
 
-    _context.Entry(tblCompany).State = EntityState.Modified;
+			if (company?.Id != null)
+			{
+				company.Status = review.Status;
+				company.ReviewMsg = review.ReviewMsg;
 
-    try
-    {
-        int re =await _context.SaveChangesAsync();
-        return JsonOk(re);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!TblCompanyExists(id))
-        {
-            return JsonFailed("Not exist");
-        }
-        else
-        {
-            throw;
-        }
-    }
-}
+				int re = _context.SaveChanges();
+				return JsonOk(re);
+			}
+			else
+			{
+				return JsonFailed("Not exist");
+			}
+
+		}
 ```
