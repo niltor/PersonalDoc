@@ -6,6 +6,12 @@ sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotne
 ;sudo apt-get update
 ;sudo apt-get -y install dotnet-dev-1.0.4;
 
+### 安装nodejs npm angular/cli
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -;
+sudo apt-get install -y nodejs;
+sudo apt-get install -y build-essential;
+npm install -g @angular/cli;
+
 ### 安装letsencrypt
 sudo apt-get -y install software-properties-common;
 sudo add-apt-repository -y ppa:certbot/certbot;
@@ -13,8 +19,8 @@ sudo apt-get update;
 sudo apt-get -y install certbot;
 
 ### 获取证书  Can't auto now! 先解析域名再验证
-##### certbot certonly --standalone -d example.com -d api.msdev.cc;
-##### certbot certonly --standalone -d example.com -d msdev.cc -d www.msdev.cc;
+##### certbot certonly --standalone -d api.msdev.cc;
+##### certbot certonly --standalone -d msdev.cc -d www.msdev.cc;
 
 ### 写入nginx配置
 cd /etc/nginx/sites-available/;
