@@ -4,6 +4,7 @@
 - 对象说明 `$_ObjectComment_$`
 - 对象名称 `$_ObjectName_$`
 - 对象变量 `$_ObjectVar_$`
+
 ```csharp
 /// <summary>
 /// 供应$_ObjectComment_$  接口
@@ -11,6 +12,8 @@
 [Produces("application/json")]
 public class $_ObjectName_$ : BaseController
 {
+
+    //TODO: implement feature
     readonly CissDbContext _context;
     public $_ObjectName_$(CissDbContext context)
     {
@@ -98,6 +101,7 @@ public class $_ObjectName_$ : BaseController
     }
 }
 
+//TODO: define Model
 public class $_ObjectName_$Form
 {
 }
