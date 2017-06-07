@@ -14,10 +14,36 @@ public class $_ObjectName_$ : BaseController
 {
 
     //TODO: implement feature
-    readonly CissDbContext _context;
-    public $_ObjectName_$(CissDbContext context)
+    private readonly CissDbContext _context;
+
+    private readonly IMapper _mapper;
+
+    public $_ObjectName_$(CissDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+    }
+
+    /// <summary>
+    /// 根据关联id,获取$_ObjectComment_$ 
+    /// </summary>
+    /// <param name="id">关联id</param>
+    /// <returns></returns>
+    [HttpGet]
+    [ProducesResponseType(200, Type = typeof(JR<List<Tbl$_ObjectName_$>>))]
+    public JsonResult Get$_ObjectName_$(int? id)
+    {
+        if (id == null || id < 1)
+        {
+            return JsonFailed("Params Error");
+        }
+
+        if (!_context.$_RelateObject_$.Any(m => m.Id == id))
+        {
+            return JsonFailed("Not Found");
+        }
+        List<Tbl$_ObjectName_$> re = _context.$_ObjectName_$.Where(m => m.$_RelateObject_$_id == id).ToList();
+        return JsonOk(re);
     }
 
     /// <summary>
@@ -31,7 +57,7 @@ public class $_ObjectName_$ : BaseController
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(List<Tbl$_ObjectName_$>))]
-    public JsonResult Get$_ObjectName_$(int p = 1, int number = 12, string type = null, int status = -1)
+    public JsonResult Get$_ObjectName_$List(int p = 1, int number = 12, string type = null, int status = -1)
     {
         IQueryable<Tbl$_ObjectName_$> query = _context.$_ObjectName_$.Skip((p - 1) * number).Take(number).AsQueryable();
         if (!String.IsNullOrEmpty(type))
