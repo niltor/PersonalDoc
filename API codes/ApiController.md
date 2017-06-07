@@ -47,7 +47,7 @@ public class $_ObjectName_$ : BaseController
     }
 
     /// <summary>
-    ///  获取$_ObjectComment_$ 
+    /// 获取$_ObjectComment_$ 
     /// </summary>
     /// <remarks>支持分页和 分类条件</remarks>
     /// <param name="p">页数</param>
@@ -84,15 +84,17 @@ public class $_ObjectName_$ : BaseController
     {
         if (!ModelState.IsValid)
         {
-            return JsonFailed(ModelState);
+            return JsonFailed();
         }
-        var companSupply = new Tbl$_ObjectName_$
+        var $_ObjectVar_$ = new Tbl$_ObjectName_$
         {
 
         };
-        _context.$_ObjectName_$.Add(companSupply);
+	    var $_ObjectVar_$ = _mapper.Map<Tbl$_ObjectName_$>($_ObjectVar_$Form);
+
+        _context.$_ObjectName_$.Add($_ObjectVar_$);
         await _context.SaveChangesAsync();
-        return JsonOk(companSupply);
+        return JsonOk($_ObjectVar_$);
     }
 
     /// <summary>
