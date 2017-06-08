@@ -111,7 +111,8 @@ public class $_ObjectName_$ : BaseController
             return JsonFailed();
         }
 
-        var certificate = _context.$_ObjectName_$.SingleOrDefault(m => m.id == id);
+        var $_ObjectVar_& = _context.$_ObjectName_$.SingleOrDefault(m => m.id == id);
+	    var $_ObjectVar_$ = _mapper.Map<Tbl$_ObjectName_$>($_ObjectVar_$Form);
 
         if (certificate?.id != null)
         {
