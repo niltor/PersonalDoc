@@ -13,10 +13,11 @@ sudo apt-get install -y build-essential;
 npm install -g @angular/cli;
 
 ### 安装letsencrypt
-sudo apt-get -y install software-properties-common;
-sudo add-apt-repository -y ppa:certbot/certbot;
-sudo apt-get update;
-sudo apt-get -y install certbot;
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
+sudo certbot --nginx
 
 ### 获取证书  Can't auto now! 先解析域名再验证
 ##### certbot certonly --standalone -d api.msdev.cc;
@@ -83,25 +84,29 @@ sudo cat > msdev.cc <<EOF
     server {
             listen 80;
             server_name  msdev.cc www.msdev.cc;
-            return 301 https://\$server_name\$request_uri;
+            return 301 https://$server_name$request_uri;
     }
 
     server {
         listen 443 ssl;
         server_name www.msdev.cc msdev.cc;
-        root /var/www/msdev.cc;
-        index index.html;
 
-        #####ssl_certificate /etc/letsencrypt/live/msdev.cc/fullchain.pem;
-        #####ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
-        #####ssl_trusted_certificate /etc/letsencrypt/live/msdev.cc/chain.pem;
+        ssl_certificate /etc/letsencrypt/live/msdev.cc/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
+        ssl_trusted_certificate /etc/letsencrypt/live/msdev.cc/chain.pem;
 
 
         location / {
             server_tokens off;
-            try_files \$uri \$uri /index.html;
+            proxy_pass http://localhost:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection keep-alive;
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
         }
     }
+
 EOF
 
 ### 建立nginx软链接
@@ -171,11 +176,33 @@ sudo cat > admin.msdev.cc.service <<EOF
     WantedBy=multi-user.target
 EOF
 
+sudo cat > msdev.cc.service <<EOF
+[Unit]
+    Description= msdev.cc
+
+    [Service]
+    WorkingDirectory=/var/www/msdev.cc
+    ExecStart=/usr/bin/dotnet /var/www/msdev.cc/WebApp.dll
+    Restart=always
+    RestartSec=10
+    SyslogIdentifier=dotnet-msdev
+    User=www-data
+    Environment=ASPNETCORE_ENVIRONMENT=Production
+    Environment=ASPNETCORE_URLS=http://localhost:5000
+
+    [Install]
+    WantedBy=multi-user.target
+EOF
+
 ### 建立软链接
 systemctl enable api.msdev.cc.service;
 systemctl enable admin.msdev.cc.service;
+systemctl enable msdev.cc.service;
+
 
 ### 启动服务
 systemctl start api.msdev.cc.service;
 systemctl start admin.msdev.cc.service;
+systemctl start msdev.cc.service;
+
 

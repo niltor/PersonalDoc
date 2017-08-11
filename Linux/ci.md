@@ -8,7 +8,7 @@ cd /var/sourcecodes/WebApi;sudo git checkout .;sudo git pull;cd /var/sourcecodes
 ### WEB
 
 ```bash
-cd /var/sourcecodes/WebApp; sudo git pull;sudo npm install; sudo ng build --aot --prod --output-path /var/publish/msdev.cc; sudo cp -r /var/publish/msdev.cc/* /var/www/msdev.cc/;
+cd /var/sourcecodes/WebApp; sudo git checkout .; sudo git pull;cd /var/sourcecodes/WebApp;sudo dotnet restore -r ubuntu.16.04-x64;sudo dotnet publish -c release -r ubuntu.16.04-x64 -o /var/publish/msdev.cc;cd /var/publish/msdev.cc/;sudo  cp -rf * /var/www/msdev.cc
 ```
 
 

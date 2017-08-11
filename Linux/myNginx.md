@@ -50,8 +50,6 @@ server {
 server {
     listen 443 ssl;
     server_name www.msdev.cc msdev.cc;
-    root /var/www/msdev.cc;
-    index index.html;
 
     ssl_certificate /etc/letsencrypt/live/msdev.cc/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
@@ -60,6 +58,11 @@ server {
 
     location / {
         server_tokens off;
-        try_files $uri $uri /index.html;
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection keep-alive;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 }
