@@ -1,10 +1,13 @@
 ### 安装nginx
 sudo apt-get -y install nginx;
 ### 安装dotnet
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg; 
+sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg ;
+
 sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list' \
 ;sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893 \
 ;sudo apt-get update
-;sudo apt-get -y install dotnet-dev-1.0.4;
+;sudo apt-get -y install dotnet-sdk-2.0.0;
 
 ### 安装nodejs npm angular/cli
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -;
@@ -13,10 +16,10 @@ sudo apt-get install -y build-essential;
 npm install -g @angular/cli;
 
 ### 安装letsencrypt
-sudo apt-get install software-properties-common
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
-sudo apt-get install python-certbot-nginx
+sudo apt-get install software-properties-common;
+sudo add-apt-repository ppa:certbot/certbot;
+sudo apt-get update;
+sudo apt-get install python-certbot-nginx;
 sudo certbot --nginx
 
 ### 获取证书  Can't auto now! 先解析域名再验证
@@ -100,17 +103,17 @@ sudo cat > msdev.cc <<EOF
             server_tokens off;
             proxy_pass http://localhost:5000;
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection keep-alive;
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
+            proxy_set_header Host \$host;
+            proxy_cache_bypass \$http_upgrade;
         }
     }
 
 EOF
 
 ### 建立nginx软链接
-cd /etc/nginx/sites-enable;
+cd /etc/nginx/sites-enabled;
 sudo ln -s /etc/nginx/sites-available/api.msdev.cc;
 sudo ln -s /etc/nginx/sites-available/admin.msdev.cc;
 sudo ln -s /etc/nginx/sites-available/msdev.cc;
