@@ -87,7 +87,7 @@ sudo cat > msdev.cc <<EOF
     server {
             listen 80;
             server_name  msdev.cc www.msdev.cc;
-            return 301 https://$server_name$request_uri;
+            return 301 https://\$server_name$request_uri;
     }
 
     server {
