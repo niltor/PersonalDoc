@@ -1,28 +1,20 @@
-### api.msdev.cc
-server {
-        listen 80;
-        server_name api.msdev.cc;
-        return 301 https://$server_name$request_uri;
-}
-server {
-        server_name api.msdev.cc;
-        listen 443 ssl;
 
-        ssl_certificate /etc/letsencrypt/live/api.msdev.cc/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/api.msdev.cc/privkey.pem;
-        ssl_trusted_certificate /etc/letsencrypt/live/api.msdev.cc/chain.pem;
 
-        location / {
-                server_tokens off;
-                proxy_pass http://localhost:10916;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection keep-alive;
-                proxy_set_header Host $host;
-                proxy_cache_bypass $http_upgrade;
-        }
+### proxy.conf
+        proxy_redirect                  off;
+        proxy_set_header                Host                    $host;
+        proxy_set_header                X-Real-IP               $remote_addr;
+        proxy_set_header                X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto $scheme;
+        client_max_body_size    10m;
+        client_body_buffer_size 128k;
+        proxy_connect_timeout   90;
+        proxy_send_timeout              90;
+        proxy_read_timeout              90;
+        proxy_buffers                   32 4k;
 
-}
+
+
 
 ### admin.msdev.cc
 server {
@@ -42,9 +34,9 @@ server {
 
 ### msdev.cc
 server {
-        listen 80;
-        server_name  msdev.cc www.msdev.cc;
-        return 301 https://$server_name$request_uri;
+        listen *:80;
+        server_name msdev.cc www.msdev.cc;
+        return 301 https://$host$request_uri;
 }
 
 server {
@@ -55,14 +47,12 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/msdev.cc/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/msdev.cc/chain.pem;
 
+    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
 
     location / {
         server_tokens off;
         proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection keep-alive;
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
     }
 }
